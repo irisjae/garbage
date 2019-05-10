@@ -25,7 +25,7 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 	public TwentyFourServer () {
 		try {
 			readUserInfo ();
-			readOnlineUser ();
+			writeOnlineUser ();
 			UnicastRemoteObject .exportObject (this, 0); }
 		catch (Exception e) {
 			e .printStackTrace (); } }
