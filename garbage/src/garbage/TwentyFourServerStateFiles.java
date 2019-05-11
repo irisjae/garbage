@@ -20,7 +20,7 @@ public class TwentyFourServerStateFiles {
 				var password = parts [1];
 				
 				var user = new User (loginName, password);
-				state .users .put (loginName, user); }); }
+				state ._users .put (loginName, user); }); }
 		catch (NoSuchFileException e) {}
 		catch (Exception e) {
 			e .printStackTrace (); } }
@@ -31,16 +31,16 @@ public class TwentyFourServerStateFiles {
 				var loginName = parts [0];
 				var uuid = UUID .fromString (parts [1]);
 
-				var user = state .users .get (loginName);
+				var user = state ._users .get (loginName);
 				var session = new Session (user, uuid);
-				state .sessions .put (user, session); }); }
+				state ._sessions .put (user, session); }); }
 		catch (NoSuchFileException e) {}
 		catch (Exception e) {
 			e .printStackTrace (); } } 
 	public static void writeUserInfo (TwentyFourServerState state) {
 		try {
 			Files .write (userInfo
-				, state .users .values ()
+				, state ._users .values ()
 					.stream ()
 					.map (user -> user .loginName + " " + user .password)
 					.collect (Collectors .toList ())
@@ -50,7 +50,7 @@ public class TwentyFourServerStateFiles {
 	public static void writeOnlineUser (TwentyFourServerState state) {
 		try {
 			Files .write (onlineUser
-				, state .sessions .values ()
+				, state ._sessions .values ()
 					.stream ()
 					.map (session -> session .loginName + " " + session .uuid)
 					.collect (Collectors .toList ())

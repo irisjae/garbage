@@ -2,13 +2,14 @@ package garbage;
 
 import java.awt.GridLayout;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class TwentyFourClientLobbyPanel {	
+public class TwentyFourClientProfilePanel {	
 	static JPanel from (TwentyFourClient client) {
 		var panel = new JPanel ();
 		
@@ -17,7 +18,15 @@ public class TwentyFourClientLobbyPanel {
 		var playGameButton = new JButton ("Play Game");
 		var leaderBoardButton = new JButton ("Leader Board");
 		var logoutButton = new JButton ("Logout");
-		var infoLabel = new JLabel ("Garbage");
+		var infoLabel = new JLabel ();
+		Reactive .watch (() -> {
+			infoLabel .setText (Utils .labelText (
+				Reactive .maybeMarkM (client .userName) .orElse ("Loading...") + "\n" +
+				"\n" +
+				"Number of wins: " + Reactive .maybeMarkM (client .userWinsCount) .map (n -> "" + n) .orElse ("Loading...") + "\n" +
+				"Number of games: " + Reactive .maybeMarkM (client .userGamesCount) .map (n -> "" + n) .orElse ("Loading...") + "\n" +
+				"Average time to win: " + Reactive .maybeMarkM (client .userWinTimesAverage) .map (n -> "" + n) .orElse ("Loading...") + "\n" +
+				"Rank: " + Reactive .maybeMarkM (client .userRank) .map (n -> "" + n) .orElse ("Loading...") ) ); } );
 
 		panel .setLayout (new GridLayout (0, 1));
 		panel .add (topPanel);
@@ -28,10 +37,14 @@ public class TwentyFourClientLobbyPanel {
 		topPanel .add (leaderBoardButton);
 		topPanel .add (logoutButton);
 
+		playGameButton .addActionListener (__ -> {
+	    	client .panel .emit ("play"); });
+		leaderBoardButton .addActionListener (__ -> {
+	    	client .panel .emit ("leaderboard"); });
 		logoutButton .addActionListener (__ -> {
 	    	try {
 	    		client .protocol ()
-    			.logout (client .session .value .get())
+    			.logout (Reactive .show (client .session) .get())
     			.handle (ProtocolResultHandler .of (
     				session -> {
     					client .session .emit (Optional .empty ()); },
