@@ -1,6 +1,9 @@
 package garbage.client;
 
 import java.awt.GridLayout;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.Optional;
 
 import javax.swing.JButton;
@@ -40,6 +43,19 @@ public class TwentyFourClientProfilePanel {
 		topPanel .add (leaderBoardButton);
 		topPanel .add (logoutButton);
 
+		client .panel .listen (_panel -> {
+			if (_panel == "profile") {
+				try {
+					client .protocol ()
+					.stats (client .session .show () .get () .loginName)
+					.handle (ProtocolResultHandler .of (
+						userStat -> {
+							client .userStat .emit (Optional .of (userStat));}, 
+						error -> {
+							JOptionPane .showMessageDialog (panel, error .error, "Error", JOptionPane .ERROR_MESSAGE); })); } 
+				catch (Exception e) {
+					JOptionPane .showMessageDialog (panel, e .getMessage (), "Error", JOptionPane .ERROR_MESSAGE);
+					e .printStackTrace (); } } });
 		playGameButton .addActionListener (__ -> {
 	    	client .panel .emit ("play"); });
 		leaderBoardButton .addActionListener (__ -> {

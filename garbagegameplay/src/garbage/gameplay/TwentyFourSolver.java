@@ -57,6 +57,7 @@ public class TwentyFourSolver {
 		try {
 			return result .equals (TwentyFourSolver .evaluate (
 				expression
+				.replaceAll ("A", "1")
 				.replaceAll ("J", "11")
 				.replaceAll ("Q", "12")
 				.replaceAll ("K", "13") ) ); }

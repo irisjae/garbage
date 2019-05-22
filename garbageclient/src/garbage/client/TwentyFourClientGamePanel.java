@@ -60,9 +60,7 @@ public class TwentyFourClientGamePanel {
 					String .join (", ", 
 						Utils .map (player -> player .id, gameplay .roomPlayers .mark ())));
 
-				if (gameplay .state .mark () == TwentyFourGameplayProtocol .JOINED) {
-					continuation .unwind (); }
-				else if (gameplay .state .mark () == TwentyFourGameplayProtocol .FAILED) {
+				if (gameplay .state .mark () == TwentyFourGameplayProtocol .FAILED) {
 					continuation .unwind (); }
 				else if (gameplay .state .mark () == TwentyFourGameplayProtocol .WON) {
 					continuation .unwind (); 

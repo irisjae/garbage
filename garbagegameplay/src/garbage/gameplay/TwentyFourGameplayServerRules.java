@@ -60,6 +60,9 @@ public class TwentyFourGameplayServerRules {
 	
 
 	void joined (List <TwentyFourGameplayPlayer> players) throws FishException {
+		for (TwentyFourGameplayPlayer player : players) {
+			gameplay .joined .emit (player); }
+		
 		TwentyFourGameplayQuestion question = TwentyFourGameplayQuestion .generate ();
 		gameplay .waiting .emit (Utils .filter (player -> ! players .contains (player), gameplay .waiting .show ()));
 		gameplay .hyperwaiting .emit (Utils .filter (player -> ! players .contains (player), gameplay .hyperwaiting .show ()));
@@ -78,6 +81,8 @@ public class TwentyFourGameplayServerRules {
 			( TwentyFourGameplayProtocol .FAILED
 			, player .id ) ); }
 	void won (TwentyFourGameplayPlayer player) throws FishException {
+		gameplay .won .emit (player);
+		
 		gameplay .playing .emit (Utils .mapFilter (room -> ! room .contains (player), gameplay .playing .show ()));
 		gameplay .responses .send (TwentyFourGameplayProtocol .response
 			( TwentyFourGameplayProtocol .WON

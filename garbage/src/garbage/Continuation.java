@@ -3,7 +3,13 @@ package garbage;
 public class Continuation {
 	boolean suspended = false;
 	Runnable continuation = () -> {};
-	
+
+	public boolean lock () {
+		if (this .blocking ()) {
+			return false; }
+		else {
+			this .block ();
+			return true; } }
 	public boolean blocking () {
 		return this .suspended; }
 	public void block () {
@@ -12,8 +18,9 @@ public class Continuation {
 		this .suspended = true;
 		this .continuation = r; }
 	public void flush () {
-		this .continuation .run ();
-		this .unwind (); }
+		Runnable continuation = this .continuation;
+		this .unwind (); 
+		continuation .run (); }
 	public void unwind () {
 		this .suspended = false;
 		this .continuation = () -> {}; }

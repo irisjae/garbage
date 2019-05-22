@@ -99,7 +99,26 @@ public class TwentyFourServerStateJDBC implements TwentyFourServerState {
 				throw new TwentyFourServerStateException ("User does not exist!"); } }
 		catch (SQLException e) {
 			throw new TwentyFourServerStateException (e .getMessage ()); } }
-
+	@Override
+	public void userJoinedGame (String loginName) throws TwentyFourServerStateException {
+		try (
+		PreparedStatement query = this ._connection .prepareStatement
+			( "UPDATE `userStat` SET `gamesCount` = `gamesCount` + 1 WHERE `loginName` = ?;" )
+		) {
+			query .setString (1, loginName);
+			query .execute (); }
+		catch (SQLException e) {
+			throw new TwentyFourServerStateException (e .getMessage ()); } }
+	@Override
+	public void userWonGame (String loginName) throws TwentyFourServerStateException {
+		try (
+		PreparedStatement query = this ._connection .prepareStatement
+			( "UPDATE `userStat` SET `winsCount` = `winsCount` + 1 WHERE `loginName` = ?;" )
+		) {
+			query .setString (1, loginName);
+			query .execute (); }
+		catch (SQLException e) {
+			throw new TwentyFourServerStateException (e .getMessage ()); } }
 	@Override
 	public void deleteUser (User user) throws TwentyFourServerStateException {
 		try (

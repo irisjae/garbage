@@ -23,7 +23,7 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 	TwentyFourServerState state;
 	
 	public TwentyFourServer () throws IOException, SQLException {
-		this .state = new TwentyFourServerStateJDBC ();
+		this .state = new TwentyFourServerStateFS ();
 		UnicastRemoteObject .exportObject (this, 0); }
 
 	static boolean validLoginName (String loginName) {
@@ -40,8 +40,19 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 			LocateRegistry .createRegistry (1099);
 			Naming .rebind ("//localhost/TwentyFour", this); 
 			
+			TwentyFourGameplayServer gameplay = new TwentyFourGameplayServer (); 
+			gameplay .joined .listen (player -> {
+				try {
+					state .userJoinedGame (player .id); }
+				catch (TwentyFourServerStateException e) {
+					e .printStackTrace (); } });
+			gameplay .won .listen (player -> {
+				try {
+					state .userWonGame (player .id); }
+				catch (TwentyFourServerStateException e) {
+					e .printStackTrace (); } });
 			log ("gameplay listening...");
-			(new Thread (new TwentyFourGameplayServer ())) .start (); }
+			(new Thread (gameplay)) .start (); }
 		catch (Exception e) {
 			throw new RuntimeException (e); } }
 	

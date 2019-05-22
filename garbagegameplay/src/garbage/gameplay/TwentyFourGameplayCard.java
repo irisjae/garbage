@@ -1,7 +1,7 @@
 package garbage.gameplay;
 
 public enum TwentyFourGameplayCard {
-	CLUBS_ACE (1, TwentyFourGameplaySuit .CLUBS, "1"),
+	CLUBS_ACE (1, TwentyFourGameplaySuit .CLUBS, "A"),
 	CLUBS_TWO (2, TwentyFourGameplaySuit .CLUBS, "2"),
 	CLUBS_THREE (3, TwentyFourGameplaySuit .CLUBS, "3"),
 	CLUBS_FOUR (4, TwentyFourGameplaySuit .CLUBS, "4"),
@@ -15,7 +15,7 @@ public enum TwentyFourGameplayCard {
 	CLUBS_QUEEN (12, TwentyFourGameplaySuit .CLUBS, "Q"),
 	CLUBS_KING (13, TwentyFourGameplaySuit .CLUBS, "K"),
 	
-	DIAMONDS_ACE (1, TwentyFourGameplaySuit .DIAMONDS, "1"),
+	DIAMONDS_ACE (1, TwentyFourGameplaySuit .DIAMONDS, "A"),
 	DIAMONDS_TWO (2, TwentyFourGameplaySuit .DIAMONDS, "2"),
 	DIAMONDS_THREE (3, TwentyFourGameplaySuit .DIAMONDS, "3"),
 	DIAMONDS_FOUR (4, TwentyFourGameplaySuit .DIAMONDS, "4"),
@@ -29,7 +29,7 @@ public enum TwentyFourGameplayCard {
 	DIAMONDS_QUEEN (12, TwentyFourGameplaySuit .DIAMONDS, "Q"),
 	DIAMONDS_KING (13, TwentyFourGameplaySuit .DIAMONDS, "K"),
 
-	HEARTS_ACE (1, TwentyFourGameplaySuit .HEARTS, "1"),
+	HEARTS_ACE (1, TwentyFourGameplaySuit .HEARTS, "A"),
 	HEARTS_TWO (2, TwentyFourGameplaySuit .HEARTS, "2"),
 	HEARTS_THREE (3, TwentyFourGameplaySuit .HEARTS, "3"),
 	HEARTS_FOUR (4, TwentyFourGameplaySuit .HEARTS, "4"),
@@ -43,7 +43,7 @@ public enum TwentyFourGameplayCard {
 	HEARTS_QUEEN (12, TwentyFourGameplaySuit .HEARTS, "Q"),
 	HEARTS_KING (13, TwentyFourGameplaySuit .HEARTS, "K"),
 
-	SPADES_ACE (1, TwentyFourGameplaySuit .SPADES, "1"),
+	SPADES_ACE (1, TwentyFourGameplaySuit .SPADES, "A"),
 	SPADES_TWO (2, TwentyFourGameplaySuit .SPADES, "2"),
 	SPADES_THREE (3, TwentyFourGameplaySuit .SPADES, "3"),
 	SPADES_FOUR (4, TwentyFourGameplaySuit .SPADES, "4"),

@@ -112,6 +112,24 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 		UserStat user = _userInfos .get (loginName);
 		return user; }
 	@Override
+	public void userJoinedGame (String loginName) throws TwentyFourServerStateException {
+		try {
+			UserStat userInfo = this .getUserStat (loginName);
+			userInfo .gamesCount += 1;
+			this ._userInfos .put (loginName, userInfo);
+			this .writeUserInfo (); }
+		catch (IOException e) {
+			throw new TwentyFourServerStateException (e .getMessage ()); } }
+	@Override
+	public void userWonGame (String loginName) throws TwentyFourServerStateException {
+		try {
+			UserStat userInfo = this .getUserStat (loginName);
+			userInfo .winsCount += 1;
+			this ._userInfos .put (loginName, userInfo);
+			this .writeUserInfo (); }
+		catch (IOException e) {
+			throw new TwentyFourServerStateException (e .getMessage ()); } }
+	@Override
 	public void deleteUser (User user) throws TwentyFourServerStateException {
 		try {
 			String loginName = user .loginName;

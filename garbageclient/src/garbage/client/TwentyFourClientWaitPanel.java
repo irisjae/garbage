@@ -40,9 +40,7 @@ public class TwentyFourClientWaitPanel {
 		Reactive .watch (() -> {
 			client ._gameplayClient .mark ()
 			.ifPresent (gameplay -> {
-				if (gameplay .state .mark () == TwentyFourGameplayProtocol .WAIT) {
-					continuation .unwind (); } 
-				else if (gameplay .state .mark () == TwentyFourGameplayProtocol .JOINED) {
+				if (gameplay .state .mark () == TwentyFourGameplayProtocol .JOINED) {
 					continuation .unwind ();
 			    	client .panel .emit ("game"); } 
 				else if (gameplay .state .mark () == TwentyFourGameplayProtocol .LEFT) {

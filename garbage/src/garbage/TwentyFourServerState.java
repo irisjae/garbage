@@ -9,6 +9,8 @@ public interface TwentyFourServerState {
 	boolean userAuthenticated (String loginName, String password) throws TwentyFourServerStateException;
 	User getUser (String loginName) throws TwentyFourServerStateException;
 	UserStat getUserStat (String loginName) throws TwentyFourServerStateException;
+	void userJoinedGame (String loginName) throws TwentyFourServerStateException;
+	void userWonGame (String loginName) throws TwentyFourServerStateException;
 	void deleteUser (User user) throws TwentyFourServerStateException;
 	
 	boolean sessionExists (String loginName) throws TwentyFourServerStateException;

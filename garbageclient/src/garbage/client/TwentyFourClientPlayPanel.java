@@ -36,7 +36,7 @@ public class TwentyFourClientPlayPanel {
 		topPanel .add (logoutButton);
 
 		Continuation continuation = Continuation .empty ();
-		Reactive .watch (() -> {
+		Reactive .watch (() -> {			
 			client ._gameplayClient .mark ()
 			.ifPresent (gameplay -> {
 				if (gameplay .state .mark () == TwentyFourGameplayProtocol .LEFT) {
@@ -45,11 +45,10 @@ public class TwentyFourClientPlayPanel {
 					continuation .flush ();
 			    	client .panel .emit ("wait"); } }); });
 		newGameButton .addActionListener (__ -> {
-			if (! continuation .blocking ()) {
+			if (continuation .lock ()) {
 				try {
 					client .gameplay ()
-					.waiting ();
-					continuation .block (); }
+					.waiting (); }
 				catch (Exception e) {
 		    		JOptionPane .showMessageDialog (panel, e .getMessage (), "Error", JOptionPane .ERROR_MESSAGE);
 					e .printStackTrace (); } } });

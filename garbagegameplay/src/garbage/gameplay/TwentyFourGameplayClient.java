@@ -19,7 +19,7 @@ public class TwentyFourGameplayClient implements Runnable {
 	MessageSender requests;
 	MessageReceiver responses;
 	
-	TwentyFourGameplayPlayer player;
+	public TwentyFourGameplayPlayer player;
 
 	public Signal <TwentyFourGameplayProtocol> state = new Signal (TwentyFourGameplayProtocol .LEFT);
 	public Signal <Optional <String>> attempt = new Signal (Optional .empty ());
