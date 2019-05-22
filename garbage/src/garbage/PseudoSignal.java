@@ -7,7 +7,7 @@ public class PseudoSignal <T> extends Reactive <T> {
 	
 	public PseudoSignal (Supplier <T> f) {
 		Reactive .watch (() -> {
-			var newValue = f .get ();
+			T newValue = f .get ();
 			if (newValue != null) {
 				if (newValue != this .cache) {
 					this .cache = newValue;

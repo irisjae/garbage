@@ -19,7 +19,7 @@ public abstract class Reactive <T> {
 
 	public abstract T show ();
 	protected void invalidate () {
-		for (var listener : this .listeners) {
+		for (Consumer listener : this .listeners) {
 			listener .accept (this .show ()); } }
 
 	public void listen (Consumer <T> listener) {
@@ -30,18 +30,18 @@ public abstract class Reactive <T> {
 	public T mark () {
 		if (Reactive .watchers .isEmpty ()) {
 			throw new RuntimeException ("Why are you marking this?"); }
-		for (var watcher : Reactive .watchers) if (! watcher .contains (this)) {
+		for (Set <Reactive> watcher : Reactive .watchers) if (! watcher .contains (this)) {
 			watcher .add (this); }
 		return this .show (); }
 	
 	public static void watch (Runnable r) {
-		var watcher = new HashSet <Reactive> ();
-		var cleanups = new LinkedList <Runnable> ();
-		var invalidateKnot = new LinkedList <Consumer> ();
+		Set <Reactive> watcher = new HashSet ();
+		Collection <Runnable> cleanups = new LinkedList ();
+		LinkedList <Consumer> invalidateKnot = new LinkedList ();
 		invalidateKnot .add ( (Consumer) (__ -> {
-			for (var x : watcher) {
+			for (Reactive x : watcher) {
 				x .listeners .remove (invalidateKnot .peekFirst ()); }
-			for (var cleanup : cleanups) {
+			for (Runnable cleanup : cleanups) {
 				cleanup .run (); }
 			Reactive .watch (r); }) );
 		Reactive .watchers .push (watcher);
@@ -49,7 +49,7 @@ public abstract class Reactive <T> {
 		r .run ();
 		Reactive .watchers .pop ();
 		Reactive .cleanups .pop ();
-		for (var x : watcher) {
+		for (Reactive x : watcher) {
 			x .listeners .add (invalidateKnot .peekFirst ()); } }
 	public static <T> Reactive <T> watching (Supplier <T> f) {
 		return new PseudoSignal <T> (f); }

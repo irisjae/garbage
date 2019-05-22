@@ -8,8 +8,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class TwentyFourServerStateFS implements TwentyFourServerState {
@@ -29,24 +31,24 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 			this ._users =
 				Files .lines (TwentyFourServerStateFS .userInfo)
 				.map (line -> {
-					var parts = line .split (" ");
-					var loginName = parts [0];
-					var password = parts [1];
+					String [] parts = line .split (" ");
+					String loginName = parts [0];
+					String password = parts [1];
 					
-					var user = new User (loginName, password);
-					return Map .entry (loginName, user); })
+					User user = new User (loginName, password);
+					return Utils .entry (loginName, user); })
 				.collect (Collectors .toMap (Map .Entry ::getKey, Map .Entry ::getValue)); 
 			this ._userInfos =
 				Files .lines (TwentyFourServerStateFS .userInfo)
 				.map (line -> {
-					var parts = line .split (" ");
-					var loginName = parts [0];
-					var winsCount = Integer .parseInt (parts [2]);
-					var gamesCount = Integer .parseInt (parts [3]);
-					var winsTimesAverage = Float .parseFloat (parts [4]);
+					String [] parts = line .split (" ");
+					String loginName = parts [0];
+					int winsCount = Integer .parseInt (parts [2]);
+					int gamesCount = Integer .parseInt (parts [3]);
+					float winsTimesAverage = Float .parseFloat (parts [4]);
 					
-					var userInfo = new UserInfo (winsCount, gamesCount, winsTimesAverage);
-					return Map .entry (loginName, userInfo); })
+					UserInfo userInfo = new UserInfo (winsCount, gamesCount, winsTimesAverage);
+					return Utils .entry (loginName, userInfo); })
 				.collect (Collectors .toMap (Map .Entry ::getKey, Map .Entry ::getValue)); }
 		catch (NoSuchFileException e) {
 			this ._users = new HashMap <String, User> (); } }
@@ -55,13 +57,13 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 			this ._sessions =
 				Files .lines (TwentyFourServerStateFS .onlineUser)
 				.map (line -> {
-					var parts = line .split (" ");
-					var loginName = parts [0];
-					var uuid = UUID .fromString (parts [1]);
+					String [] parts = line .split (" ");
+					String loginName = parts [0];
+					UUID uuid = UUID .fromString (parts [1]);
 	
-					var user = this ._users .get (loginName);
-					var session = new Session (user, uuid);
-					return Map .entry (user, session); })
+					User user = this ._users .get (loginName);
+					Session session = new Session (user, uuid);
+					return Utils .entry (user, session); })
 				.collect (Collectors .toMap (Map .Entry ::getKey, Map .Entry ::getValue)); }
 		catch (NoSuchFileException e) {
 			this ._sessions = new HashMap <User, Session> (); } } 
@@ -70,7 +72,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 			, this ._users .values ()
 				.stream ()
 				.map (user -> {
-					var userInfo = this ._userInfos .get (user .loginName);
+					UserInfo userInfo = this ._userInfos .get (user .loginName);
 					return user .loginName + " " + user .password + " " + userInfo .winsCount + " " + userInfo .gamesCount + " " + userInfo .winsTimesAverage; } )
 				.collect (Collectors .toList ())
 			, StandardCharsets .UTF_8); }
@@ -90,8 +92,8 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	@Override
 	public User newUser (String loginName, String password) throws TwentyFourServerStateException {
 		try {
-			var user = new User (loginName, password);
-			var userInfo = new UserInfo ();
+			User user = new User (loginName, password);
+			UserInfo userInfo = new UserInfo ();
 			this ._users .put (loginName, user);
 			this ._userInfos .put (loginName, userInfo);
 			this .writeUserInfo ();
@@ -103,16 +105,16 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 		return userExists (loginName) && this ._users .get (loginName) .password .equals (password); }
 	@Override
 	public User getUser (String loginName) throws TwentyFourServerStateException {
-		var user = _users .get (loginName);
+		User user = _users .get (loginName);
 		return user; }
 	@Override
 	public UserInfo getUserInfo(String loginName) throws TwentyFourServerStateException {
-		var user = _userInfos .get (loginName);
+		UserInfo user = _userInfos .get (loginName);
 		return user; }
 	@Override
 	public void deleteUser (User user) throws TwentyFourServerStateException {
 		try {
-			var loginName = user .loginName;
+			String loginName = user .loginName;
 			_users .remove (loginName);
 			_userInfos .remove (loginName);
 			this .writeUserInfo (); }
@@ -126,7 +128,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	@Override
 	public Session newSession (User user) throws TwentyFourServerStateException {
 		try {
-			var session = new Session (user);
+			Session session = new Session (user);
 			this ._sessions .put (user, session);
 			this .writeOnlineUser ();
 			return session; }
@@ -135,7 +137,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	@Override
 	public Session getSession (UUID uuid) throws TwentyFourServerStateException {
 		try {
-			var session = this ._sessions .values () .stream ()
+			Session session = this ._sessions .values () .stream ()
 				.filter (sessionB -> sessionB .uuid .equals (uuid)) .findAny () .get ();
 			return session; }
 		catch (NoSuchElementException e) {
@@ -143,7 +145,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	@Override
 	public void deleteSession (Session session) throws TwentyFourServerStateException {
 		try {
-			var loginName = session .loginName;
+			String loginName = session .loginName;
 			User user = _users .get (loginName);
 			_sessions .remove (user);
 			this .writeOnlineUser (); }

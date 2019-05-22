@@ -2,6 +2,7 @@ package garbage;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,7 +16,7 @@ public class Utils {
 	public static String labelText (String text) {
 		return "<html><pre>" + text + "</pre></html>"; }
 	public static <T> List <T> cons (T head, Collection <T> tail) {
-		return Stream .concat (List .of (head) .stream (), tail .stream ()) .collect (Collectors .toList ()); }
+		return Stream .concat (Utils .listOf (head) .stream (), tail .stream ()) .collect (Collectors .toList ()); }
 	public static <T> List <T> concat (Collection <T> a, Collection <T> b) {
 		return Stream .concat (a .stream (), b .stream ()) .collect (Collectors .toList ()); }
 	public static <T> List <T> remove (T needle, List <T> haystack) {
@@ -27,12 +28,12 @@ public class Utils {
 	public static <T> List <T> filter (Predicate <T> fn, List <T> list) {
 		return list .stream () .filter (fn) .collect (Collectors .toList ()); }
 	public static <T, U> Map <U, T> mapCons (U key, T value, Map <U, T> tail) {
-		return Stream .concat (List .of (Map .entry (key, value)) .stream (), tail .entrySet () .stream ())
+		return Stream .concat (Utils .listOf (Utils .entry (key, value)) .stream (), tail .entrySet () .stream ())
 			.collect (Collectors .toMap (Entry ::getKey, Entry ::getValue)); }
 	public static <T, U, V> Map <V, U> mapMap (Function <T, U> fn, Map <V, T> map) {
 		return map .entrySet ()
 			.stream ()
-			.map (entry -> Map .entry (entry .getKey (), fn .apply (entry .getValue ())))
+			.map ((Function <Entry <V, T>, Entry <V, U>>) (entry -> Utils .entry (entry .getKey (), fn .apply (entry .getValue ()))))
 			.collect (Collectors .toMap (Entry ::getKey, Entry ::getValue)); }
 	public static <T, U> Map <U, T> mapFilter (Predicate <T> cond, Map <U, T> map) {
 		return map .entrySet ()
@@ -51,8 +52,15 @@ public class Utils {
 			return Stream .concat
 					( IntStream .range (0, n - 1) .boxed ()
 						.flatMap (i -> 
-							List .of
-								( List .of (Integer .valueOf (n - 1), i)
-								, List .of (i, Integer .valueOf (n - 1))) .stream () )
+							Utils .listOf
+								( Utils .listOf (Integer .valueOf (n - 1), i)
+								, Utils .listOf (i, Integer .valueOf (n - 1))) .stream () )
 					, indexPairs (n - 1) ); } }
+	public static <T, U> Entry <T, U> entry (T key, U value) {
+		return new java .util .AbstractMap .SimpleEntry (key, value); }
+	public static <T> List <T> listOf (T ... ts) {
+		List <T> list = new LinkedList ();
+		for (T t : ts) {
+			list .add (t); }
+		return list; }
 	}
