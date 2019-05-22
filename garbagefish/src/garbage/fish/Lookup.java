@@ -4,13 +4,17 @@ import javax.jms.Queue;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.Topic;
 import javax.jms.TopicConnectionFactory;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 public class Lookup {
+	static Context context;
 	public static Object thing (String name) throws FishException {
 		try {
-			return (new InitialContext ()) .lookup (name); }
+			if (Lookup .context == null) {
+				Lookup .context = new InitialContext (); }
+			return Lookup .context .lookup (name); }
 		catch (NamingException e) {
 			throw new FishException (e); } }
 
