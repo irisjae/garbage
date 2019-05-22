@@ -5,6 +5,7 @@ import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLException;
 
 import garbage.ProtocolResult;
 import garbage.Session;
@@ -13,15 +14,16 @@ import garbage.TwentyFourServerState;
 import garbage.TwentyFourServerStateException;
 import garbage.TwentyFourServerStateFS;
 import garbage.User;
-import garbage.UserInfo;
+import garbage.UserStat;
+import garbage.connector.TwentyFourServerStateJDBC;
 import garbage.gameplay.TwentyFourGameplayServer;
 
 public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 
 	TwentyFourServerState state;
 	
-	public TwentyFourServer () throws IOException {
-		this .state = new TwentyFourServerStateFS ();
+	public TwentyFourServer () throws IOException, SQLException {
+		this .state = new TwentyFourServerStateJDBC ();
 		UnicastRemoteObject .exportObject (this, 0); }
 
 	static boolean validLoginName (String loginName) {
@@ -88,14 +90,14 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 			throw new RemoteException (e .getMessage ()); } }
 
 	@Override
-	public ProtocolResult <UserInfo> stats (String loginName) throws RemoteException {
+	public ProtocolResult <UserStat> stats (String loginName) throws RemoteException {
 		try {
 			if (! state .userExists (loginName)) {
 				log ("failed stat: " + loginName);
 				return ProtocolResult .fromError ("UserInfo not found!"); }
 			else {
 				log ("stat: " + loginName);
-				return ProtocolResult .fromResult (state .getUserInfo (loginName)); } }
+				return ProtocolResult .fromResult (state .getUserStat (loginName)); } }
 		catch (TwentyFourServerStateException e) {
 			throw new RemoteException (e .getMessage ()); } }
 	

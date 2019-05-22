@@ -19,7 +19,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	static Path onlineUser = Paths .get ("OnlineUser.txt");
 
 	Map<String, User> _users = new HashMap ();
-	Map<String, UserInfo> _userInfos = new HashMap ();
+	Map<String, UserStat> _userInfos = new HashMap ();
 	Map<User, Session> _sessions = new HashMap ();
 	
 	public TwentyFourServerStateFS () throws IOException {
@@ -47,7 +47,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 					int gamesCount = Integer .parseInt (parts [3]);
 					float winsTimesAverage = Float .parseFloat (parts [4]);
 					
-					UserInfo userInfo = new UserInfo (winsCount, gamesCount, winsTimesAverage);
+					UserStat userInfo = new UserStat (winsCount, gamesCount, winsTimesAverage);
 					return Utils .entry (loginName, userInfo); })
 				.collect (Collectors .toMap (Map .Entry ::getKey, Map .Entry ::getValue)); }
 		catch (NoSuchFileException e) {
@@ -72,7 +72,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 			, this ._users .values ()
 				.stream ()
 				.map (user -> {
-					UserInfo userInfo = this ._userInfos .get (user .loginName);
+					UserStat userInfo = this ._userInfos .get (user .loginName);
 					return user .loginName + " " + user .password + " " + userInfo .winsCount + " " + userInfo .gamesCount + " " + userInfo .winsTimesAverage; } )
 				.collect (Collectors .toList ())
 			, StandardCharsets .UTF_8); }
@@ -93,7 +93,7 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 	public User newUser (String loginName, String password) throws TwentyFourServerStateException {
 		try {
 			User user = new User (loginName, password);
-			UserInfo userInfo = new UserInfo ();
+			UserStat userInfo = new UserStat ();
 			this ._users .put (loginName, user);
 			this ._userInfos .put (loginName, userInfo);
 			this .writeUserInfo ();
@@ -108,8 +108,8 @@ public class TwentyFourServerStateFS implements TwentyFourServerState {
 		User user = _users .get (loginName);
 		return user; }
 	@Override
-	public UserInfo getUserInfo(String loginName) throws TwentyFourServerStateException {
-		UserInfo user = _userInfos .get (loginName);
+	public UserStat getUserStat(String loginName) throws TwentyFourServerStateException {
+		UserStat user = _userInfos .get (loginName);
 		return user; }
 	@Override
 	public void deleteUser (User user) throws TwentyFourServerStateException {

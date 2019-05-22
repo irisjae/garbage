@@ -11,7 +11,7 @@ import garbage.Session;
 import garbage.TwentyFourServerState;
 import garbage.TwentyFourServerStateException;
 import garbage.User;
-import garbage.UserInfo;
+import garbage.UserStat;
 
 public class TwentyFourServerStateJDBC implements TwentyFourServerState {
 	Connection _connection;
@@ -36,12 +36,19 @@ public class TwentyFourServerStateJDBC implements TwentyFourServerState {
 	@Override
 	public User newUser (String loginName, String password) throws TwentyFourServerStateException {
 		try (
-		PreparedStatement query = this ._connection .prepareStatement
-			( "INSERT INTO `user` (`loginName`, `password`) VALUES (?, ?)" ) 
+		PreparedStatement userQuery = this ._connection .prepareStatement
+		( "INSERT INTO `user` (`loginName`, `password`) VALUES (?, ?)" ) ; 
+		PreparedStatement userStatQuery = this ._connection .prepareStatement
+		( "INSERT INTO `userStat` (`loginName`, `winsCount`, `gamesCount`, `winTimesAverage`) VALUES (?, ?, ?, ?)" ) 
 		) {
-			query .setString (1, loginName);
-			query .setString (2, password);
-			query .execute ();
+			userQuery .setString (1, loginName);
+			userQuery .setString (2, password);
+			userStatQuery .setString (1, loginName);
+			userStatQuery .setInt (2, 0);
+			userStatQuery .setInt (3, 0);
+			userStatQuery .setFloat (4, 0);
+			userQuery .execute ();
+			userStatQuery .execute ();
 			User user = new User (loginName, password);
 			return user; }
 		catch (SQLException e) {
@@ -75,10 +82,10 @@ public class TwentyFourServerStateJDBC implements TwentyFourServerState {
 		catch (SQLException e) {
 			throw new TwentyFourServerStateException (e .getMessage ()); } }
 	@Override
-	public UserInfo getUserInfo (String loginName) throws TwentyFourServerStateException {
+	public UserStat getUserStat (String loginName) throws TwentyFourServerStateException {
 		try (
 		PreparedStatement query = this ._connection .prepareStatement
-			( "SELECT `winsCount`, `gamesCount`, `winTimesAverage` FROM `userInfo` WHERE `loginName` = ?" )
+			( "SELECT `winsCount`, `gamesCount`, `winTimesAverage` FROM `userStat` WHERE `loginName` = ?" )
 		) {
 			query .setString (1, loginName);
 			ResultSet results = query .executeQuery ();
@@ -86,8 +93,8 @@ public class TwentyFourServerStateJDBC implements TwentyFourServerState {
 				int winsCount = results .getInt (1);
 				int gamesCount = results .getInt (2);
 				float winTimesAverage = results .getFloat (3);
-				UserInfo userInfo = new UserInfo (winsCount, gamesCount, winTimesAverage);
-				return userInfo; }
+				UserStat userStat = new UserStat (winsCount, gamesCount, winTimesAverage);
+				return userStat; }
 			else {
 				throw new TwentyFourServerStateException ("User does not exist!"); } }
 		catch (SQLException e) {

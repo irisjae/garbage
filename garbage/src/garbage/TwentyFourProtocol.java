@@ -9,6 +9,6 @@ public interface TwentyFourProtocol extends java.rmi.Remote {
 	public ProtocolResult <Session> login (String loginName, String password) throws RemoteException;
 	public ProtocolResult <Void> logout (Session session) throws RemoteException;
 
-	public ProtocolResult <UserInfo> stats (String loginName) throws RemoteException;
+	public ProtocolResult <UserStat> stats (String loginName) throws RemoteException;
 	
 	public void ping () throws RemoteException;}

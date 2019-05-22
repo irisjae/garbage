@@ -26,10 +26,10 @@ public class TwentyFourClientProfilePanel {
 			infoLabel .setText (Utils .nowrapText (
 				client .session .mark () .map (session -> session .loginName) .orElse ("Loading...") + "\n" +
 				"\n" +
-				"Number of wins: " + client .userInfo .mark () .map (userInfo -> "" + userInfo .winsCount) .orElse ("Loading...") + "\n" +
-				"Number of games: " + client .userInfo .mark () .map (userInfo -> "" + userInfo .gamesCount) .orElse ("Loading...") + "\n" +
-				"Average time to win: " + client .userInfo .mark () .map (userInfo -> "" + userInfo .winsTimesAverage) .orElse ("Loading...") + "\n" +
-				"Rank: " + client .userInfo .mark () .map (userInfo -> "" + userInfo .rank) .orElse ("Loading...") ) ); } );
+				"Number of wins: " + client .userStat .mark () .map (userStat -> "" + userStat .winsCount) .orElse ("Loading...") + "\n" +
+				"Number of games: " + client .userStat .mark () .map (userStat -> "" + userStat .gamesCount) .orElse ("Loading...") + "\n" +
+				"Average time to win: " + client .userStat .mark () .map (userStat -> "" + userStat .winsTimesAverage) .orElse ("Loading...") + "\n" +
+				"Rank: " + client .userStat .mark () .map (userStat -> "" + userStat .rank) .orElse ("Loading...") ) ); } );
 
 		panel .setLayout (new GridLayout (0, 1));
 		panel .add (topPanel);

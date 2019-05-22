@@ -53,8 +53,8 @@ public class TwentyFourClientFrame {
 						client .protocol ()
 						.stats (session .loginName)
 						.handle (ProtocolResultHandler .of (
-							userInfo -> {
-								client .userInfo .emit (Optional .of (userInfo)); },
+							userStat -> {
+								client .userStat .emit (Optional .of (userStat)); },
 		    				error -> {
 								JOptionPane .showMessageDialog (frame, error .error, "Error", JOptionPane .ERROR_MESSAGE); } )); }
 					catch (Exception e) {

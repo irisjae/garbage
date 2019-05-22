@@ -12,7 +12,7 @@ import garbage.Session;
 import garbage.Signal;
 import garbage.Reactive;
 import garbage.TwentyFourProtocol;
-import garbage.UserInfo;
+import garbage.UserStat;
 import garbage.fish.FishException;
 import garbage.gameplay.TwentyFourGameplayClient;
 import garbage.gameplay.TwentyFourGameplayPlayer;
@@ -24,7 +24,7 @@ public class TwentyFourClient implements Runnable {
 
 	Signal <String> panel = new Signal ();
 	Signal <Optional <Session>> session = new Signal (Optional .empty ());
-	Signal <Optional <UserInfo>> userInfo = new Signal (Optional .empty ());
+	Signal <Optional <UserStat>> userStat = new Signal (Optional .empty ());
 	
 	TwentyFourProtocol protocol () throws RemoteException, MalformedURLException, NotBoundException {
 		try {
