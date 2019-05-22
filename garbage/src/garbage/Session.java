@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class Session implements Serializable {
-	UUID uuid;
-	String loginName;
+	public UUID uuid;
+	public String loginName;
 
 	public Session (User user) {
 		this (user, UUID .randomUUID ()); }

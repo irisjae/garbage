@@ -1,68 +1,60 @@
 package garbage;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
+import java.util.Deque;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-
-public class Reactive <T> {
-	static List <List <Reactive>> invalidaters = new LinkedList <List <Reactive>> ();
+public abstract class Reactive <T> {
+	static Deque <Set <Reactive>> watchers = new ArrayDeque ();
+	static Deque <Collection <Runnable>> cleanups = new ArrayDeque ();
 	
-	List <Consumer <T>> sinks = new LinkedList <Consumer <T>> ();
-	T value;
+	List <Consumer <T>> listeners = new LinkedList ();
 
-	public Reactive () {}
-	public Reactive (T value) {
-		this .emit (value); }
+	public abstract T show ();
+	protected void invalidate () {
+		for (var listener : this .listeners) {
+			listener .accept (this .show ()); } }
 
-	void listen (Consumer <T> sink) {
-		sinks .add (sink);
-		if (this .value != null) {
-			sink .accept (this .value); } }
-	void unlisten (Consumer <T> sink) {
-		sinks .remove (sink); }
-	void emit (T value) {
-		if (value != null) {
-			this .value = value;
-			for (var sink : this .sinks) {
-				sink .accept (value); } } }
-
-	static <T> T show (Reactive <T> x) {
-		return Reactive .maybeShow (x) .get (); }
-	static <T> Optional <T> maybeShow (Reactive <T> x) {
-		return Optional .ofNullable (x .value); }
-	static <T> Optional <T> maybeShowM (Reactive <Optional <T>> x) {
-		return Reactive .maybeShow (x) .flatMap (y -> y); }
-	
-	static <T> T mark (Reactive <T> x) {
-		return Reactive .maybeMark (x) .get (); }
-	static <T> Optional <T> maybeMark (Reactive <T> x) {
-		if (Reactive .invalidaters .isEmpty ()) {
+	public void listen (Consumer <T> listener) {
+		this .listeners .add (listener);
+		try {
+			listener .accept (this .show ()); }
+		catch (RuntimeException e) {} }
+	public T mark () {
+		if (Reactive .watchers .isEmpty ()) {
 			throw new RuntimeException ("Why are you marking this?"); }
-		for (var invalidater : Reactive .invalidaters) {
-			invalidater .add (x); }
-		return Reactive .maybeShow (x); }
-	static <T> Optional <T> maybeMarkM (Reactive <Optional <T>> x) {
-		return Reactive .maybeMark (x) .flatMap (y -> y); }
+		for (var watcher : Reactive .watchers) if (! watcher .contains (this)) {
+			watcher .add (this); }
+		return this .show (); }
 	
-	
-	static void watch (Runnable r) {
-		var invalidater = new LinkedList <Reactive> ();
-		var invalidate_ = new LinkedList <Consumer> ();
-		invalidate_ .add ( (Consumer) (__ -> {
-			if (! Reactive .invalidaters .contains (invalidater)) {
-				for (var x : invalidater) {
-					x .unlisten (invalidate_ .peekFirst ()); }
-				Reactive .watch (r); } }) );
-		Reactive .invalidaters .add (invalidater);
+	public static void watch (Runnable r) {
+		var watcher = new HashSet <Reactive> ();
+		var cleanups = new LinkedList <Runnable> ();
+		var invalidateKnot = new LinkedList <Consumer> ();
+		invalidateKnot .add ( (Consumer) (__ -> {
+			for (var x : watcher) {
+				x .listeners .remove (invalidateKnot .peekFirst ()); }
+			for (var cleanup : cleanups) {
+				cleanup .run (); }
+			Reactive .watch (r); }) );
+		Reactive .watchers .push (watcher);
+		Reactive .cleanups .push (cleanups);
 		r .run ();
-		for (var x : invalidater) {
-			x .listen (invalidate_ .peekFirst ()); }
-		Reactive .invalidaters .remove (invalidater); }
-	static <T> Reactive <T> watching (Supplier <T> f) {
-		var x = new Reactive <T> ();
-		Reactive .watch (() -> {
-			x .emit (f .get()); });
-		return x; } }
+		Reactive .watchers .pop ();
+		Reactive .cleanups .pop ();
+		for (var x : watcher) {
+			x .listeners .add (invalidateKnot .peekFirst ()); } }
+	public static <T> Reactive <T> watching (Supplier <T> f) {
+		return new PseudoSignal <T> (f); }
+	
+	public static void cleanup (Runnable r) {
+		Reactive .cleanups .peekFirst () .add (r); }
+
+	}

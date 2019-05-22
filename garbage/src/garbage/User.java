@@ -1,8 +1,8 @@
 package garbage;
 
 public class User {
-	String loginName;
-	String password;
+	public String loginName;
+	public String password;
 	
 	public User (String loginName, String password) {
 		this .loginName = loginName;
