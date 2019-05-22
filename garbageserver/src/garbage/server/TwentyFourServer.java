@@ -12,6 +12,7 @@ import garbage.TwentyFourProtocol;
 import garbage.TwentyFourServerState;
 import garbage.TwentyFourServerStateException;
 import garbage.TwentyFourServerStateFS;
+import garbage.User;
 import garbage.UserInfo;
 import garbage.gameplay.TwentyFourGameplayServer;
 
@@ -54,8 +55,8 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 				return ProtocolResult .fromError ("Login name already used!"); }
 			else {
 				log ("registered: " + loginName);
-				var user = state .newUser (loginName, password);
-				var session = state .newSession (user);
+				User user = state .newUser (loginName, password);
+				Session session = state .newSession (user);
 				return ProtocolResult .fromResult (session); } }
 		catch (TwentyFourServerStateException e) {
 			throw new RemoteException (e .getMessage ()); } }
@@ -71,8 +72,8 @@ public class TwentyFourServer implements TwentyFourProtocol, Runnable {
 				return ProtocolResult .fromError ("User already logged in!"); }
 			else {
 				log ("logged in: " + loginName);
-				var user = state .getUser (loginName);
-				var session = state .newSession (user);
+				User user = state .getUser (loginName);
+				Session session = state .newSession (user);
 				return ProtocolResult .fromResult (session); } }
 		catch (TwentyFourServerStateException e) {
 			throw new RemoteException (e .getMessage ()); } }
