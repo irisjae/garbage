@@ -19,8 +19,8 @@ public class TwentyFourGameplayServerRules {
 	Runnable hyperwaitingAnyWaitingThenJoinRule = () -> {
 		try {
 			if (gameplay .hyperwaiting .mark () .size () > 0 && gameplay .waiting .mark () .size () > 0) {
-				var hyperwaits = gameplay .hyperwaiting .show ();
-				var waits = gameplay .waiting .show ();
+				List <TwentyFourGameplayPlayer> hyperwaits = gameplay .hyperwaiting .show ();
+				List <TwentyFourGameplayPlayer> waits = gameplay .waiting .show ();
 				joined (Utils .concat (hyperwaits, waits .subList (0, Math .min (4 - hyperwaits .size (), waits .size ())))); } }
 		catch (FishException e) {
 			e .printStackTrace (); } };
@@ -48,7 +48,7 @@ public class TwentyFourGameplayServerRules {
 		
 		left (player); }
 	void attempt (TwentyFourGameplayPlayer player, String attempt) throws FishException {
-		var question = gameplay .playing .show () .entrySet () .stream ()
+		TwentyFourGameplayQuestion question = gameplay .playing .show () .entrySet () .stream ()
 			.filter (entry -> entry .getValue () .contains (player)) .map (Entry ::getKey) .findAny () .get ();
 		if (question .solutionOk (attempt)) {
 			won (player); }
@@ -58,7 +58,7 @@ public class TwentyFourGameplayServerRules {
 	
 
 	void joined (List <TwentyFourGameplayPlayer> players) throws FishException {
-		var question = TwentyFourGameplayQuestion .generate ();
+		TwentyFourGameplayQuestion question = TwentyFourGameplayQuestion .generate ();
 		gameplay .waiting .emit (Utils .filter (player -> ! players .contains (player), gameplay .waiting .show ()));
 		gameplay .hyperwaiting .emit (Utils .filter (player -> ! players .contains (player), gameplay .hyperwaiting .show ()));
 		gameplay .playing .emit (Utils .mapCons (question, players, gameplay .playing .show ()));
@@ -85,10 +85,10 @@ public class TwentyFourGameplayServerRules {
 
 	
 	void apply (String requestText) throws TwentyFourGameplayException, FishException {
-		var parts = requestText .split (" ");
-		var request = TwentyFourGameplayProtocol .valueOf (parts [0]);
-		var player = TwentyFourGameplayPlayer .of (parts [1]);
-		var attempt = request == TwentyFourGameplayProtocol .ATTEMPT ? parts [2] : null;
+		String [] parts = requestText .split (" ");
+		TwentyFourGameplayProtocol request = TwentyFourGameplayProtocol .valueOf (parts [0]);
+		TwentyFourGameplayPlayer player = TwentyFourGameplayPlayer .of (parts [1]);
+		String attempt = request == TwentyFourGameplayProtocol .ATTEMPT ? parts [2] : null;
 
 		if (request == TwentyFourGameplayProtocol .WAIT) {
 			wait (player); }

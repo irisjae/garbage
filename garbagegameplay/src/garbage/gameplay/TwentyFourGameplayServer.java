@@ -26,7 +26,7 @@ public class TwentyFourGameplayServer implements Runnable {
 	
 	@Override
 	public void run () {
-		var rules = new TwentyFourGameplayServerRules (this);
+		TwentyFourGameplayServerRules rules = new TwentyFourGameplayServerRules (this);
 		
 		Reactive .watch (rules .fourWaitingThenJoinRule);
 		Reactive .watch (rules .hyperwaitingAnyWaitingThenJoinRule);

@@ -16,7 +16,7 @@ public class TwentyFourGameplayPlayer {
     
     public static TwentyFourGameplayPlayer of (String id) {
     	if (! TwentyFourGameplayPlayer ._cache .containsKey (id)) {
-	    	var player = new TwentyFourGameplayPlayer ();
+	    	TwentyFourGameplayPlayer player = new TwentyFourGameplayPlayer ();
 	    	player .id = id;
 	    	TwentyFourGameplayPlayer ._cache .put (id, player); }
     	return TwentyFourGameplayPlayer ._cache .get (id); } }

@@ -1,6 +1,7 @@
 package garbage.gameplay;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,14 +17,14 @@ public class TwentyFourGameplayQuestion {
 	TwentyFourGameplayCard D;
 	
 	boolean solutionOk (String attempt) {
-		var attemptValues = Stream .of (
+		String attemptValues = Stream .of (
 				attempt
 				.replaceAll ("(", "") .replaceAll (")", "")
 				.replaceAll ("+", "") .replaceAll ("*", "")
 				.replaceAll ("-", "") .replaceAll ("/", "")
 				.split ("") )
 	        .sorted () .collect (Collectors .joining ());
-		var cardsValues = Stream .of ((A .name + B .name + C .name + D .name) .split ("") )
+		String cardsValues = Stream .of ((A .name + B .name + C .name + D .name) .split ("") )
 	        .sorted () .collect (Collectors .joining ());
 		return (attemptValues .equals (cardsValues))
 			&& TwentyFourSolver .solvable (attempt); }
@@ -33,8 +34,8 @@ public class TwentyFourGameplayQuestion {
 		return String .join (";", Utils .map (card -> card .toString (), List .of (this .A, this .B, this .C, this .D))); }
 	
 	static TwentyFourGameplayQuestion fromString (String string) {
-		var cards = Utils .map (card -> TwentyFourGameplayCard .valueOf (card), string .split (";"));
-		var question = new TwentyFourGameplayQuestion ();
+		List <TwentyFourGameplayCard> cards = Utils .map (card -> TwentyFourGameplayCard .valueOf (card), string .split (";"));
+		TwentyFourGameplayQuestion question = new TwentyFourGameplayQuestion ();
 		question .A = cards .get (0);
 		question .B = cards .get (1);
 		question .C = cards .get (2);
@@ -42,12 +43,12 @@ public class TwentyFourGameplayQuestion {
 		return question; }
 	
 	static TwentyFourGameplayQuestion generate () {
-		var deck = IntStream .range (0, TwentyFourGameplayCard .values () .length) .boxed ()
+		List <Integer> deck = IntStream .range (0, TwentyFourGameplayCard .values () .length) .boxed ()
 			.collect (Collectors .toCollection (ArrayList ::new));
 		Collections .shuffle (deck);
-		var cards = Utils .map (i -> TwentyFourGameplayCard .values () [i], deck .subList (0, 4));
+		List <TwentyFourGameplayCard> cards = Utils .map (i -> TwentyFourGameplayCard .values () [i], deck .subList (0, 4));
 		if (TwentyFourSolver .solvable (cards .get (0), cards .get (1), cards .get (2), cards .get (3))) {
-			var question = new TwentyFourGameplayQuestion ();
+			TwentyFourGameplayQuestion question = new TwentyFourGameplayQuestion ();
 			question .A = cards .get (0);
 			question .B = cards .get (1);
 			question .C = cards .get (2);

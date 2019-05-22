@@ -1,6 +1,7 @@
 package garbage.gameplay;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -15,7 +16,7 @@ public class TwentyFourSolver {
 	static Pattern multiplication = Pattern .compile ("^(.+)\\*(.+)$");
 	static Pattern division = Pattern .compile ("^(.+)/(.+)$");
 	static Rational evaluate (String expression) {
-		var matcher = (Matcher) null;
+		Matcher matcher = null;
 		if ((matcher = parentheses .matcher (expression)) .matches ()) {
 			return evaluate (matcher .group (1) + evaluate (matcher .group (2)) + matcher .group (3)); }
 		else if ((matcher = literal .matcher (expression)) .matches ()) {
@@ -41,14 +42,14 @@ public class TwentyFourSolver {
 			return result .equals (terms .get (0)); }
 		else {
 			return Utils .indexPairs (terms .size ()) 
-				.flatMap (pair -> { 
-					var rest = Utils .unpick (pair, terms);
-					var a = terms .get (pair .get (0));
-					var b = terms .get (pair .get (1));
+				.flatMap ((Function <List <Integer>, Stream <Rational>>) (pair -> { 
+					List <Rational> rest = Utils .unpick (pair, terms);
+					Rational a = terms .get (pair .get (0));
+					Rational b = terms .get (pair .get (1));
 					return Stream .of (RationalOperation .values ())
 						.filter (op -> ! (op == RationalOperation .DIVIDE && b .equals (Rational .of (0))))
 						.map (op -> op .action .apply (a, b))
-						.filter (c -> solvable (result, Utils .cons (c, rest))); } )
+						.filter (c -> solvable (result, Utils .cons (c, rest))); } ))
 				.findAny () .isPresent (); } }
 	static boolean solvable (String expression) {
 		return TwentyFourSolver .solvable (Rational .of (24), expression); } 

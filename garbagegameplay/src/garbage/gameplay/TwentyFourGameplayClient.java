@@ -69,11 +69,11 @@ public class TwentyFourGameplayClient implements Runnable {
 	
 
 	void apply (String responseText) throws TwentyFourGameplayException {
-		var parts = responseText .split (" ");
-		var response = TwentyFourGameplayProtocol .valueOf (parts [0]);
-		var question = response == TwentyFourGameplayProtocol .JOINED ? TwentyFourGameplayQuestion .fromString (parts [1]) : null;
-		var players = Utils .map (TwentyFourGameplayPlayer ::of, Arrays .asList (parts) .subList (1, parts .length));
-		var player = players .get (0);
+		String [] parts = responseText .split (" ");
+		TwentyFourGameplayProtocol response = TwentyFourGameplayProtocol .valueOf (parts [0]);
+		TwentyFourGameplayQuestion question = response == TwentyFourGameplayProtocol .JOINED ? TwentyFourGameplayQuestion .fromString (parts [1]) : null;
+		List <TwentyFourGameplayPlayer> players = Utils .map (TwentyFourGameplayPlayer ::of, Arrays .asList (parts) .subList (1, parts .length));
+		TwentyFourGameplayPlayer player = players .get (0);
 
 		if (response == TwentyFourGameplayProtocol .JOINED) {
 			joined (question, players); }
@@ -88,7 +88,7 @@ public class TwentyFourGameplayClient implements Runnable {
 	
 	@Override
 	public void run () {
-		var rules = this;
+		TwentyFourGameplayClient rules = this;
 
 		while (true) {
 			try {
