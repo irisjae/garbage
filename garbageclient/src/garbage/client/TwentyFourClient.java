@@ -35,14 +35,14 @@ public class TwentyFourClient implements Runnable {
 	
 	@Override
 	public void run() {
-		var client = this;
+		TwentyFourClient client = this;
 		Reactive .watch (() -> {
 			client .session .mark ()
 			.ifPresent (session -> {
 				try {
-					var player = TwentyFourGameplayPlayer .of (session .loginName);
+					TwentyFourGameplayPlayer player = TwentyFourGameplayPlayer .of (session .loginName);
 					client ._gameplayClient = new TwentyFourGameplayClient (player);
-					var thread = new Thread (client ._gameplayClient);
+					Thread thread = new Thread (client ._gameplayClient);
 					thread .start ();
 					Reactive .cleanup (() -> { thread .interrupt (); });
 					}

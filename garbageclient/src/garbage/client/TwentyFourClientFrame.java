@@ -16,8 +16,8 @@ public class TwentyFourClientFrame {
 	static List <String> loggedInPanels = Arrays .asList ("profile", "play", "leaderboard", "game");
 
 	static JFrame from (TwentyFourClient client) {
-		var frame = new JFrame ("Twenty Four");
-		var layout = new CardLayout ();
+		JFrame frame = new JFrame ("Twenty Four");
+		CardLayout layout = new CardLayout ();
 		
 		frame .setLayout (layout);
 		frame .add (TwentyFourClientLoginPanel .from (client), "login");

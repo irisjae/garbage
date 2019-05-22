@@ -14,16 +14,16 @@ import garbage.ProtocolResultHandler;
 
 public class TwentyFourClientRegisterPanel {
 	static JPanel from (TwentyFourClient client) {
-		var panel = new JPanel ();
+		JPanel panel = new JPanel ();
 		
-		var loginNameLabel = new JLabel ("Login name:");
-		var loginNameField = new JTextField ();
-		var passwordLabel = new JLabel ("Password:");
-		var passwordField = new JPasswordField ();
-		var confirmPasswordLabel = new JLabel ("Confirm Password:");
-		var confirmPasswordField = new JPasswordField ();
-		var registerButton = new JButton ("Register");
-		var cancelButton = new JButton ("Cancel");
+		JLabel loginNameLabel = new JLabel ("Login name:");
+		JTextField loginNameField = new JTextField ();
+		JLabel passwordLabel = new JLabel ("Password:");
+		JPasswordField passwordField = new JPasswordField ();
+		JLabel confirmPasswordLabel = new JLabel ("Confirm Password:");
+		JPasswordField confirmPasswordField = new JPasswordField ();
+		JButton registerButton = new JButton ("Register");
+		JButton cancelButton = new JButton ("Cancel");
 		
 		panel .setLayout (new GridLayout (0, 1));
 		panel .add (loginNameLabel);

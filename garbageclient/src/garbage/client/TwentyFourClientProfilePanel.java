@@ -14,14 +14,14 @@ import garbage.Utils;
 
 public class TwentyFourClientProfilePanel {	
 	static JPanel from (TwentyFourClient client) {
-		var panel = new JPanel ();
+		JPanel panel = new JPanel ();
 		
-		var topPanel = new JPanel ();
-		var userProfileButton = new JButton ("User Profile");
-		var playGameButton = new JButton ("Play Game");
-		var leaderBoardButton = new JButton ("Leader Board");
-		var logoutButton = new JButton ("Logout");
-		var infoLabel = new JLabel ();
+		JPanel topPanel = new JPanel ();
+		JButton userProfileButton = new JButton ("User Profile");
+		JButton playGameButton = new JButton ("Play Game");
+		JButton leaderBoardButton = new JButton ("Leader Board");
+		JButton logoutButton = new JButton ("Logout");
+		JLabel infoLabel = new JLabel ();
 		Reactive .watch (() -> {
 			infoLabel .setText (Utils .labelText (
 				client .session .mark () .map (session -> session .loginName) .orElse ("Loading...") + "\n" +
