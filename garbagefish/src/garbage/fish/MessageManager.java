@@ -20,6 +20,7 @@ public abstract class MessageManager {
 		try {
 			if (this ._session == null) {
 				Connection connection = this .factory .createConnection ();
+				connection .start ();
 				this ._session = connection .createSession (false, Session .AUTO_ACKNOWLEDGE); }
 			return this ._session; }
 		catch (JMSException e) {

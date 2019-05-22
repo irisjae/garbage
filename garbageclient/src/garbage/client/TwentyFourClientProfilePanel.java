@@ -23,7 +23,7 @@ public class TwentyFourClientProfilePanel {
 		JButton logoutButton = new JButton ("Logout");
 		JLabel infoLabel = new JLabel ();
 		Reactive .watch (() -> {
-			infoLabel .setText (Utils .labelText (
+			infoLabel .setText (Utils .nowrapText (
 				client .session .mark () .map (session -> session .loginName) .orElse ("Loading...") + "\n" +
 				"\n" +
 				"Number of wins: " + client .userInfo .mark () .map (userInfo -> "" + userInfo .winsCount) .orElse ("Loading...") + "\n" +

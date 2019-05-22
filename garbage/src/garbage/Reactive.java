@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public abstract class Reactive <T> {
 	static Deque <Set <Reactive>> watchers = new ArrayDeque ();
@@ -19,7 +20,7 @@ public abstract class Reactive <T> {
 
 	public abstract T show ();
 	protected void invalidate () {
-		for (Consumer listener : this .listeners) {
+		for (Consumer listener : this .listeners .stream () .collect (Collectors .toList ())) {
 			listener .accept (this .show ()); } }
 
 	public void listen (Consumer <T> listener) {

@@ -19,8 +19,8 @@ public class TwentyFourGameplayQuestion {
 	boolean solutionOk (String attempt) {
 		String attemptValues = Stream .of (
 				attempt
-				.replaceAll ("(", "") .replaceAll (")", "")
-				.replaceAll ("+", "") .replaceAll ("*", "")
+				.replaceAll ("\\(", "") .replaceAll ("\\)", "")
+				.replaceAll ("\\+", "") .replaceAll ("\\*", "")
 				.replaceAll ("-", "") .replaceAll ("/", "")
 				.split ("") )
 	        .sorted () .collect (Collectors .joining ());

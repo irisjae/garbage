@@ -14,7 +14,7 @@ import garbage.Utils;
 public class TwentyFourClientFrame {
 	
 	static List <String> loggedOutPanels = Arrays .asList ("login", "register");
-	static List <String> loggedInPanels = Arrays .asList ("profile", "play", "leaderboard", "game");
+	static List <String> loggedInPanels = Arrays .asList ("profile", "play", "leaderboard", "wait", "game");
 
 	static JFrame from (TwentyFourClient client) {
 		JFrame frame = new JFrame ("Twenty Four");
@@ -26,7 +26,8 @@ public class TwentyFourClientFrame {
 		frame .add (TwentyFourClientProfilePanel .from (client), "profile");
 		frame .add (TwentyFourClientPlayPanel .from (client), "play");
 		frame .add (TwentyFourClientLeaderBoardPanel .from (client), "leaderboard");
-		// frame .add (TwentyFourClientProfilePanel .from (client), "game");
+		frame .add (TwentyFourClientWaitPanel .from (client), "wait");
+		frame .add (TwentyFourClientGamePanel .from (client), "game");
 		
 		frame .pack ();
 		

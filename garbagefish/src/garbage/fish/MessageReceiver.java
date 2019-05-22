@@ -1,5 +1,7 @@
 package garbage.fish;
 
+import java.util.concurrent.TimeoutException;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -25,6 +27,17 @@ public class MessageReceiver extends MessageManager {
 	public String receive () throws FishException {
 		try {
 			TextMessage sessionMessage = (TextMessage) this .consumer () .receive ();
+			System .out .println ("receiving: " + sessionMessage .getText ());
 			return sessionMessage .getText (); } 
 		catch (JMSException e) {
-			throw new FishException (e); } } }
+			throw new FishException (e); } }
+	public String receive (int timeout) throws FishException, TimeoutException {
+		try {
+			TextMessage sessionMessage = (TextMessage) this .consumer () .receive (timeout);
+			if (sessionMessage != null) {
+				System .out .println ("receiving: " + sessionMessage .getText ());
+				return sessionMessage .getText (); }
+			else {
+				throw new TimeoutException (); } }
+		catch (JMSException e) {
+			throw new FishException (e); } }  }

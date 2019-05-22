@@ -6,7 +6,7 @@ import java.util.Map;
 public class TwentyFourGameplayPlayer {
 	static Map <String, TwentyFourGameplayPlayer> _cache = new HashMap ();
 	
-	String id;
+	public String id;
 
     @Override
     public boolean equals (Object obj) {

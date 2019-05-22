@@ -7,7 +7,13 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import garbage.Continuation;
 import garbage.ProtocolResultHandler;
+import garbage.Reactive;
+import garbage.Signal;
+import garbage.fish.FishException;
+import garbage.gameplay.TwentyFourGameplayClient;
+import garbage.gameplay.TwentyFourGameplayProtocol;
 
 public class TwentyFourClientPlayPanel {	
 	static JPanel from (TwentyFourClient client) {
@@ -29,24 +35,42 @@ public class TwentyFourClientPlayPanel {
 		topPanel .add (leaderBoardButton);
 		topPanel .add (logoutButton);
 
+		Continuation continuation = Continuation .empty ();
+		Reactive .watch (() -> {
+			client ._gameplayClient .mark ()
+			.ifPresent (gameplay -> {
+				if (gameplay .state .mark () == TwentyFourGameplayProtocol .LEFT) {
+					continuation .unwind (); } 
+				else if (gameplay .state .mark () == TwentyFourGameplayProtocol .WAIT) {
+					continuation .flush ();
+			    	client .panel .emit ("wait"); } }); });
 		newGameButton .addActionListener (__ -> {
-			
-	    	client .panel .emit ("wait"); });
+			if (! continuation .blocking ()) {
+				try {
+					client .gameplay ()
+					.waiting ();
+					continuation .block (); }
+				catch (Exception e) {
+		    		JOptionPane .showMessageDialog (panel, e .getMessage (), "Error", JOptionPane .ERROR_MESSAGE);
+					e .printStackTrace (); } } });
 		userProfileButton .addActionListener (__ -> {
-	    	client .panel .emit ("profile"); });
+			if (! continuation .blocking ()) {
+		    	client .panel .emit ("profile"); } });
 		leaderBoardButton .addActionListener (__ -> {
-	    	client .panel .emit ("leaderboard"); });
+			if (! continuation .blocking ()) {
+				client .panel .emit ("leaderboard"); } });
 		logoutButton .addActionListener (__ -> {
-	    	try {
-	    		client .protocol ()
-    			.logout (client .session .show () .get ())
-    			.handle (ProtocolResultHandler .of (
-    				___ -> {
-    					client .session .emit (Optional .empty ()); },
-    				error -> {
-						JOptionPane .showMessageDialog (panel, error .error, "Error", JOptionPane .ERROR_MESSAGE); } ) ); }
-	    	catch (Exception e) {
-	    		JOptionPane .showMessageDialog (panel, e .getMessage (), "Error", JOptionPane .ERROR_MESSAGE);
-	    		e .printStackTrace (); } });
+			if (! continuation .blocking ()) {
+		    	try {
+		    		client .protocol ()
+	    			.logout (client .session .show () .get ())
+	    			.handle (ProtocolResultHandler .of (
+	    				___ -> {
+	    					client .session .emit (Optional .empty ()); },
+	    				error -> {
+							JOptionPane .showMessageDialog (panel, error .error, "Error", JOptionPane .ERROR_MESSAGE); } ) ); }
+		    	catch (Exception e) {
+		    		JOptionPane .showMessageDialog (panel, e .getMessage (), "Error", JOptionPane .ERROR_MESSAGE);
+		    		e .printStackTrace (); } } });
 		
 		return panel; } }

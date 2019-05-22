@@ -19,9 +19,10 @@ import garbage.gameplay.TwentyFourGameplayPlayer;
 
 public class TwentyFourClient implements Runnable {
 	TwentyFourProtocol _protocol;
-	TwentyFourGameplayClient _gameplayClient;	
+	
+	Signal <Optional <TwentyFourGameplayClient>> _gameplayClient = new Signal (Optional .empty ());	
 
-	Signal <String> panel = new Signal <String> ();
+	Signal <String> panel = new Signal ();
 	Signal <Optional <Session>> session = new Signal (Optional .empty ());
 	Signal <Optional <UserInfo>> userInfo = new Signal (Optional .empty ());
 	
@@ -31,22 +32,25 @@ public class TwentyFourClient implements Runnable {
 		catch (Exception e) {
 			this ._protocol = (TwentyFourProtocol) Naming .lookup("//localhost/TwentyFour"); }
 		return this ._protocol; }	
+	TwentyFourGameplayClient gameplay () throws FishException {
+		if (! this ._gameplayClient .show () .isPresent ()) {
+			TwentyFourClient client = this;
+			
+			Session session = client .session .show () .get ();
+			TwentyFourGameplayPlayer player = TwentyFourGameplayPlayer .of (session .loginName);
+			client ._gameplayClient .emit (Optional .of (new TwentyFourGameplayClient (player)));
+			Thread thread = new Thread (client ._gameplayClient .show () .get ());
+			thread .start ();
+			
+			Signal <Boolean> done = new Signal (false);
+			Reactive .watch (() -> {
+				if (! done .show ()) {
+					if (! client .session .mark () .isPresent ()) {
+						thread .interrupt ();
+						done .emit (true); } } } ); }
+		return this ._gameplayClient .show () .get (); }
 	
 	
 	@Override
 	public void run() {
-		TwentyFourClient client = this;
-		Reactive .watch (() -> {
-			client .session .mark ()
-			.ifPresent (session -> {
-				try {
-					TwentyFourGameplayPlayer player = TwentyFourGameplayPlayer .of (session .loginName);
-					client ._gameplayClient = new TwentyFourGameplayClient (player);
-					Thread thread = new Thread (client ._gameplayClient);
-					thread .start ();
-					Reactive .cleanup (() -> { thread .interrupt (); });
-					}
-				catch (FishException e) {
-					e .printStackTrace (); } }); } );
-		
 		TwentyFourClientFrame .from (this) .setVisible (true); } }

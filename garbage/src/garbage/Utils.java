@@ -1,5 +1,6 @@
 package garbage;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -15,8 +16,10 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Utils {
-	public static String labelText (String text) {
+	public static String nowrapText (String text) {
 		return "<html><pre>" + text + "</pre></html>"; }
+	public static String wrapText (String text) {
+		return "<html><body style='width: 150px;'>" + text + "</body></html>"; }
 	public static <T> List <T> cons (T head, Collection <T> tail) {
 		return Stream .concat (Utils .listOf (head) .stream (), tail .stream ()) .collect (Collectors .toList ()); }
 	public static <T> List <T> concat (Collection <T> a, Collection <T> b) {
@@ -66,7 +69,7 @@ public class Utils {
 			list .add (t); }
 		return list; }
 	public static <T> T [] arrayOf (List <T> ts) {
-		T [] result = (T []) new Object [ts .size ()];
+		T [] result = (T []) ts .stream () .toArray ();
 		for (int i = 0; i < ts .size (); i ++) {
 			result [i] = ts .get (i); }
 		return result; }

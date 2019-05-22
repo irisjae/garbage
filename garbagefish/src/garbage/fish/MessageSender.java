@@ -24,6 +24,7 @@ public class MessageSender extends MessageManager {
 	
 	public void send (String message) throws FishException {
 		try {
+			System .out .println ("sending: " + message);
 			TextMessage sessionMessage = this .session () .createTextMessage (message);
 			this .producer () .send (sessionMessage); }
 		catch (JMSException e) {

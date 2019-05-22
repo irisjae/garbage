@@ -14,7 +14,7 @@ public class TwentyFourGameplayServerRules {
 
 	Runnable fourWaitingThenJoinRule = () -> {
 		try {
-			if (gameplay .waiting .mark () .size () > 4) {
+			if (gameplay .waiting .mark () .size () >= 4) {
 				joined (gameplay .waiting .show () .subList (0, 4)); } }
 		catch (FishException e) {
 			e .printStackTrace (); } };
@@ -66,9 +66,9 @@ public class TwentyFourGameplayServerRules {
 		gameplay .playing .emit (Utils .mapCons (question, players, gameplay .playing .show ()));
 		gameplay .responses .send (TwentyFourGameplayProtocol .response
 			( TwentyFourGameplayProtocol .JOINED
-			, Utils .arrayOf (Utils .cons
+			, Utils .cons
 				( question .toString ()
-				, Utils .map ((Function <TwentyFourGameplayPlayer, String>) (player -> player .id), players) ) ) ) ); }
+				, Utils .map ((Function <TwentyFourGameplayPlayer, String>) (player -> player .id), players) ) ) ); }
 	void left (TwentyFourGameplayPlayer player) throws FishException {
 		gameplay .responses .send (TwentyFourGameplayProtocol .response
 			( TwentyFourGameplayProtocol .LEFT
@@ -93,11 +93,11 @@ public class TwentyFourGameplayServerRules {
 
 		if (request == TwentyFourGameplayProtocol .WAIT) {
 			wait (player); }
-		if (request == TwentyFourGameplayProtocol .HYPERWAIT) {
+		else if (request == TwentyFourGameplayProtocol .HYPERWAIT) {
 			hyperwait (player); }
 		else if (request == TwentyFourGameplayProtocol .QUIT) {
 			quit (player); }
 		else if (request == TwentyFourGameplayProtocol .ATTEMPT) {
 			attempt (player, attempt); }
 		else {
-			throw new TwentyFourGameplayException ("Unexpected request " + request); } } }
+			throw new TwentyFourGameplayException ("Unexpected request '" + request + "':'" + parts [0] + "'"); } } }

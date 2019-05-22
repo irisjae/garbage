@@ -1,6 +1,8 @@
 package garbage;
 
-public class UserInfo {
+import java.io.Serializable;
+
+public class UserInfo implements Serializable {
 	public int winsCount;
 	public int gamesCount;
 	public float winsTimesAverage;
