@@ -34,7 +34,7 @@ public class TwentyFourSolver {
 			throw new IllegalArgumentException ("Cannot parse expression " + expression + "!"); } }
 	
 	static boolean solvable (TwentyFourGameplayCard a, TwentyFourGameplayCard b, TwentyFourGameplayCard c, TwentyFourGameplayCard d) {
-		return TwentyFourSolver .solvable (Rational .of (24), Utils .map (card -> Rational .of (card .value), List .of (a, b, c, d))); }
+		return TwentyFourSolver .solvable (Rational .of (24), Utils .map (card -> Rational .of (card .value), Utils .listOf (a, b, c, d))); }
 	static boolean solvable (Rational result, List <Rational> terms) {
 		if (terms .size () == 0) {
 			return false; }

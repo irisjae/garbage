@@ -2,7 +2,9 @@ package garbage.gameplay;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.function.Function;
 
+import garbage.User;
 import garbage.Utils;
 import garbage.fish.FishException;
 import garbage.fish.MessageInterrupt;
@@ -64,10 +66,9 @@ public class TwentyFourGameplayServerRules {
 		gameplay .playing .emit (Utils .mapCons (question, players, gameplay .playing .show ()));
 		gameplay .responses .send (TwentyFourGameplayProtocol .response
 			( TwentyFourGameplayProtocol .JOINED
-			, Utils .cons
+			, Utils .arrayOf (Utils .cons
 				( question .toString ()
-				, Utils .map (player -> player .id, players) )
-				.toArray (String [] ::new) ) ); }
+				, Utils .map ((Function <TwentyFourGameplayPlayer, String>) (player -> player .id), players) ) ) ) ); }
 	void left (TwentyFourGameplayPlayer player) throws FishException {
 		gameplay .responses .send (TwentyFourGameplayProtocol .response
 			( TwentyFourGameplayProtocol .LEFT

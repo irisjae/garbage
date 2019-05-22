@@ -24,7 +24,7 @@ public class TwentyFourGameplayClient implements Runnable {
 	Signal <TwentyFourGameplayProtocol> state = new Signal (TwentyFourGameplayProtocol .LEFT);
 	Signal <Optional <String>> attempt = new Signal ();
 	Signal <Optional <TwentyFourGameplayQuestion>> roomQuestion = new Signal (Optional .empty ());
-	Signal <List <TwentyFourGameplayPlayer>> roomPlayers = new Signal (List .of ());
+	Signal <List <TwentyFourGameplayPlayer>> roomPlayers = new Signal (Utils .listOf ());
 	
 	public TwentyFourGameplayClient (TwentyFourGameplayPlayer player) throws FishException {
 		this .player = player;
@@ -56,7 +56,7 @@ public class TwentyFourGameplayClient implements Runnable {
 		gameplay .state .emit (TwentyFourGameplayProtocol .LEFT);
 		if (player == gameplay .player) {
 			gameplay .roomQuestion .emit (Optional .empty ());
-			gameplay .roomPlayers .emit (List .of ()); }
+			gameplay .roomPlayers .emit (Utils .listOf ()); }
 		else {
 			gameplay .roomPlayers .emit (Utils .remove (player, gameplay .roomPlayers .show ())); } }
 	void failed (TwentyFourGameplayPlayer player) {
@@ -65,7 +65,7 @@ public class TwentyFourGameplayClient implements Runnable {
 		gameplay .state .emit (TwentyFourGameplayProtocol .WON); 
 		if (gameplay .roomPlayers .show () .contains (player)) {
 			gameplay .roomQuestion .emit (Optional .empty ());
-			gameplay .roomPlayers .emit (List .of ()); } }
+			gameplay .roomPlayers .emit (Utils .listOf ()); } }
 	
 
 	void apply (String responseText) throws TwentyFourGameplayException {

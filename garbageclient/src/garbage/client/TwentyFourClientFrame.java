@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import garbage.ProtocolResultHandler;
+import garbage.Utils;
 
 public class TwentyFourClientFrame {
 	
@@ -36,7 +37,7 @@ public class TwentyFourClientFrame {
 		client .panel .listen (panel -> {
 			layout .show (frame .getContentPane (), panel); });
 		client .session .listen (session -> {
-			session .ifPresentOrElse (
+			Utils .ifPresentOrElse (session, 
 				__ -> {
 					if (TwentyFourClientFrame .loggedOutPanels .contains (client .panel .show ())) {
 						client .panel .emit (TwentyFourClientFrame .loggedInPanels .get (0)); } },

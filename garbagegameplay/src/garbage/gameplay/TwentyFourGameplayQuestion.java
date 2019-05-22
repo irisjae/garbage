@@ -31,7 +31,7 @@ public class TwentyFourGameplayQuestion {
 	
 	@Override
 	public String toString () {
-		return String .join (";", Utils .map (card -> card .toString (), List .of (this .A, this .B, this .C, this .D))); }
+		return String .join (";", Utils .map (card -> card .toString (), Utils .listOf (this .A, this .B, this .C, this .D))); }
 	
 	static TwentyFourGameplayQuestion fromString (String string) {
 		List <TwentyFourGameplayCard> cards = Utils .map (card -> TwentyFourGameplayCard .valueOf (card), string .split (";"));

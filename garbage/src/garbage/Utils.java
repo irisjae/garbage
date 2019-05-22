@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -63,4 +65,14 @@ public class Utils {
 		for (T t : ts) {
 			list .add (t); }
 		return list; }
+	public static <T> T [] arrayOf (List <T> ts) {
+		T [] result = (T []) new Object [ts .size ()];
+		for (int i = 0; i < ts .size (); i ++) {
+			result [i] = ts .get (i); }
+		return result; }
+	public static <T> void ifPresentOrElse (Optional <T> maybe, Consumer <T> _then, Runnable _else) {
+		if (maybe .isPresent ()) {
+			_then .accept (maybe .get ()); }
+		else {
+			_else .run (); } }
 	}
